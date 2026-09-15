@@ -61,3 +61,15 @@
 ![E6 test 1](proofs/e6_test_1.png)
 
 ![E6 test 2](proofs/e6_test_2.png)
+
+## Bài 6 mở rộng:
+
+### Server log
+
+![E6e server log](proofs/e6e_serverlog.png)
+
+### Test
+
+![E6e test 1](proofs/e6e_test_1.png)
+
+![E6e test 2](proofs/e6e_test_2.png)
