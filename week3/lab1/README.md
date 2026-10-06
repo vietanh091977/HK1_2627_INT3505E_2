@@ -1,6 +1,6 @@
 # Thiết Kế Hệ Thống Blog API
 
-## 1. Xác định Resources (Tài nguyên trong miền)
+## 1. Xác định Resources
 
 Dựa trên yêu cầu của nền tảng blog, hệ thống xoay quanh 4 tài nguyên chính
 *   **Users:** Người dùng hệ thống/tác giả, bao gồm thông tin hồ sơ cá nhân và tính năng theo dõi (follow) tác giả khác
@@ -12,15 +12,15 @@ Dựa trên yêu cầu của nền tảng blog, hệ thống xoay quanh 4 tài n
 
 ## 2. Phân loại Resource
 
-*   **Collection (Tập hợp):** Dùng để truy xuất danh sách hoặc tạo mới tài nguyên
+*   **Collection:** Dùng để truy xuất danh sách hoặc tạo mới tài nguyên
     *   `/users`
     *   `/posts`
     *   `/tags`
-*   **Item (Tài nguyên đơn lẻ):** Dùng để thao tác trên một tài nguyên cụ thể
+*   **Item:** Dùng để thao tác trên một tài nguyên cụ thể
     *   `/users/{user_id}`
     *   `/posts/{post_id}`
     *   `/tags/{tag_id}`
-*   **Sub-resource (Tài nguyên con):** Thể hiện quan hệ cha-con trực tiếp
+*   **Sub-resource:** Thể hiện quan hệ cha-con trực tiếp
     *   `/posts/{post_id}/comments`: Bình luận phụ thuộc vào bài viết
     *   `/users/{user_id}/followers` hoặc `/users/{user_id}/following`: Chức năng theo dõi người dùng
 
@@ -28,23 +28,23 @@ Dựa trên yêu cầu của nền tảng blog, hệ thống xoay quanh 4 tài n
 
 ## 3. Sơ đồ cây Endpoint & Version Segment
 
-### Users (Người dùng)
+### Users
 *   `GET    /api/v1/users` : Lấy danh sách người dùng.
 *   `GET    /api/v1/users/{user_id}` : Xem hồ sơ chi tiết của người dùng.
 *   `GET    /api/v1/users/{user_id}/followers` : Lấy danh sách những người theo dõi user này
 *   `POST   /api/v1/users/{user_id}/followers` : Theo dõi user này
 *   `DELETE /api/v1/users/{user_id}/followers` : Hủy theo dõi
 
-### Posts (Bài viết)
+### Posts
 *   `GET    /api/v1/posts` : Lấy danh sách bài viết
 *   `POST   /api/v1/posts` : Đăng bài viết mới
 *   `GET    /api/v1/posts/{post_id}` : Xem chi tiết một bài viết
 *   `PATCH  /api/v1/posts/{post_id}` : Cập nhật một số nội dung của bài viết
 *   `DELETE /api/v1/posts/{post_id}` : Xóa bài viết
 
-### Comments (Bình luận)
+### Comments
 *   `GET    /api/v1/posts/{post_id}/comments` : Lấy danh sách bình luận của một bài viết cụ thể
 *   `POST   /api/v1/posts/{post_id}/comments` : Thêm bình luận mới vào bài viết
 
-### Tags (Thẻ)
+### Tags
 *   `GET    /api/v1/tags` : Lấy danh sách tất cả các thẻ hiện có trên blog
