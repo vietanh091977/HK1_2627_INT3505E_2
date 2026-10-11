@@ -1,0 +1,173 @@
+openapi: 3.0.3
+info:
+  title: Tasks API
+  version: 1.0.0
+  description: API quản lý task nội bộ
+  contact:
+    name: API Team
+    email: api@example.vn
+servers:
+  - url: http://localhost:5000/v1
+    description: Local development server
+security:
+  - bearerAuth: []
+
+tags:
+  - name: tasks
+    description: Quản lý task nội bộ
+
+paths:
+  /tasks:
+    post:
+      tags:
+        - tasks
+      summary: Tạo task mới
+      description: Tạo một task mới trong hệ thống cho người dùng hiện tại.
+      operationId: createTask
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: Dữ liệu khởi tạo task mới
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskInput'
+            example:
+              title: "Họp nhóm API team"
+              dueDate: "2026-10-20"
+              priority: "high"
+              assigneeId: "user-123"
+      responses:
+        '201':
+          description: Tạo task thành công
+          headers:
+            Location:
+              description: URI dẫn tới tài nguyên task vừa tạo
+              schema:
+                type: string
+                example: "/v1/tasks/550e8400-e29b-41d4-a716-446655440000"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CreateTaskInput:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: "Hoàn thiện báo cáo SOA"
+        priority:
+          type: string
+          enum: [low, normal, high]
+          default: normal
+          example: "high"
+        dueDate:
+          type: string
+          format: date
+          example: "2026-10-30"
+        assigneeId:
+          type: string
+          example: "usr_98765"
+
+    Task:
+      type: object
+      required:
+        - id
+        - title
+        - status
+        - priority
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "a8098c1a-f86e-11da-bd1a-00112444be1e"
+        title:
+          type: string
+          example: "Hoàn thiện báo cáo SOA"
+        status:
+          type: string
+          enum: [open, done]
+          example: "open"
+        priority:
+          type: string
+          enum: [low, normal, high]
+          example: "high"
+        dueDate:
+          type: string
+          format: date
+          example: "2026-10-30"
+        assigneeId:
+          type: string
+          nullable: true
+          example: "usr_98765"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-10-11T08:00:00Z"
+
+    ErrorResponse:
+      type: object
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri
+          example: "https://api.example.vn/errors/validation-error"
+        title:
+          type: string
+          example: "Validation Error"
+        status:
+          type: integer
+          example: 422
+        detail:
+          type: string
+          example: "Trường 'title' là bắt buộc và không được để trống."
+        instance:
+          type: string
+          example: "/v1/tasks"
+
+  responses:
+    BadRequest:
+      description: Dữ liệu gửi lên sai định dạng cú pháp (Malformed JSON)
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    ValidationError:
+      description: Dữ liệu không thỏa mãn các điều kiện validation logic/schema
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    InternalServerError:
+      description: Lỗi máy chủ không xác định
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
