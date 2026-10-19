@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BorrowRecord",
+  "description": "Schema biểu diễn một phiếu mượn sách của độc giả trong thư viện.",
+  "type": "object",
+  "required": ["userId", "dueDate", "items"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^loan_[a-z0-9]+$",
+      "description": "Mã định danh của phiếu mượn."
+    },
+    "userId": {
+      "type": "string",
+      "description": "Mã định danh của độc giả mượn sách."
+    },
+    "borrowedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Thời điểm tạo phiếu mượn thành công."
+    },
+    "dueDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Hạn chót độc giả phải hoàn trả sách."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["borrowing", "returned", "overdue"],
+      "description": "Trạng thái của phiếu mượn."
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Danh sách các đầu sách được mượn trong phiếu.",
+      "items": {
+        "type": "object",
+        "description": "Thông tin chi tiết về từng cuốn sách trong phiếu mượn.",
+        "required": ["bookId"],
+        "properties": {
+          "bookId": {
+            "type": "string",
+            "description": "Mã định danh của đầu sách mượn (tham chiếu đến Book.id)."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

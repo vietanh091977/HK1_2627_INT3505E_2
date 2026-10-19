@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "User",
+  "description": "Schema định nghĩa thông tin người dùng.",
+  "type": "object",
+  "required": ["email", "fullName", "role"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^user_[a-z0-9]+$",
+      "description": "Mã định danh của người dùng."
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Địa chỉ email của người dùng"
+    },
+    "fullName": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 100,
+      "description": "Họ và tên của người dùng."
+    },
+    "role": {
+      "type": "string",
+      "enum": ["librarian", "member"],
+      "description": "Phân quyền người dùng trong hệ thống."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "suspended"],
+      "description": "Trạng thái tài khoản."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Thời điểm tạo tài khoản."
+    }
+  },
+  "additionalProperties": false
+}

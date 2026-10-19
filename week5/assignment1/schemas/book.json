@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Book",
+  "description": "Schema định nghĩa thông tin đầu sách trong hệ thống quản lý thư viện.",
+  "type": "object",
+  "required": ["isbn", "title", "categoryId", "totalCopies"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^book_[a-z0-9]+$",
+      "description": "Mã định danh duy nhất của cuốn sách."
+    },
+    "isbn": {
+      "type": "string",
+      "pattern": "^\\d{13}$",
+      "description": "Mã ISBN 13 chữ số."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "Tiêu đề của cuốn sách."
+    },
+    "published_year": {
+      "type": "integer",
+      "minimum": 1000,
+      "maximum": 2030,
+      "description": "Năm xuất bản của cuốn sách."
+    },
+    "category_id": {
+      "type": "integer",
+      "description": "Khóa ngoại tham chiếu đến thể loại sách."
+    },
+    "total_copies": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Tổng số lượng bản sách mà thư viện sở hữu."
+    },
+    "available_copies": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Số lượng bản sách hiện còn sẵn trên kệ."
+    },
+    "authors": {
+      "type": "array",
+      "description": "Danh sách các tác giả tham gia biên soạn cùng vai trò cụ thể.",
+      "items": {
+        "type": "object",
+        "description": "Thông tin chi tiết về từng tác giả liên kết với cuốn sách.",
+        "required": ["authorId", "role"],
+        "properties": {
+          "authorId": {
+            "type": "integer",
+            "description": "Mã định danh của tác giả trong hệ thống."
+          },
+          "role": {
+            "type": "string",
+            "enum": ["lead", "co", "editor"],
+            "description": "Vai trò của tác giả đối với tác phẩm."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
