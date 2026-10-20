@@ -1,0 +1,222 @@
+{
+  "info": {
+    "_postman_id": "b8d87344-c28a-44c3-bb04-984b5a3c9516",
+    "name": "Bookstore API",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59066369",
+    "_collection_link": "https://go.postman.co/collection/59066369-b8d87344-c28a-44c3-bb04-984b5a3c9516?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Offset",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?strategy=offset&offset=0&limit=2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "books"
+          ],
+          "query": [
+            {
+              "key": "strategy",
+              "value": "offset"
+            },
+            {
+              "key": "offset",
+              "value": "0"
+            },
+            {
+              "key": "limit",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Genre",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?genre=tech&limit=2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "books"
+          ],
+          "query": [
+            {
+              "key": "genre",
+              "value": "tech"
+            },
+            {
+              "key": "limit",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Sort",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?sort=-price,title&limit=2",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "books"
+          ],
+          "query": [
+            {
+              "key": "sort",
+              "value": "-price,title"
+            },
+            {
+              "key": "limit",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Offset & genre & sort multi-key",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?strategy=offset&offset=0&limit=2&genre=tech&sort=-price,title",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "books"
+          ],
+          "query": [
+            {
+              "key": "strategy",
+              "value": "offset"
+            },
+            {
+              "key": "offset",
+              "value": "0"
+            },
+            {
+              "key": "limit",
+              "value": "2"
+            },
+            {
+              "key": "genre",
+              "value": "tech"
+            },
+            {
+              "key": "sort",
+              "value": "-price,title"
+            }
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Cursor first page",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?strategy=cursor&limit=2&genre=tech&sort=-price,title",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "books"
+          ],
+          "query": [
+            {
+              "key": "strategy",
+              "value": "cursor"
+            },
+            {
+              "key": "limit",
+              "value": "2"
+            },
+            {
+              "key": "genre",
+              "value": "tech"
+            },
+            {
+              "key": "sort",
+              "value": "-price,title"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cursor next page",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/books?strategy=cursor&limit=2&genre=tech&sort=-price,title&cursor={{cursor}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "books"
+          ],
+          "query": [
+            {
+              "key": "strategy",
+              "value": "cursor"
+            },
+            {
+              "key": "limit",
+              "value": "2"
+            },
+            {
+              "key": "genre",
+              "value": "tech"
+            },
+            {
+              "key": "sort",
+              "value": "-price,title"
+            },
+            {
+              "key": "cursor",
+              "value": "{{cursor}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

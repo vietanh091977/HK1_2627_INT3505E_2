@@ -2,7 +2,7 @@
 
 ---
 
-### 1.1 Bảng Resource
+### 1. Bảng Resource
 
 | Resource | Thuộc tính (Attribute) | Kiểu dữ liệu | Ràng buộc | Mô tả |
 | :--- | :--- | :--- | :--- | :--- |
@@ -40,7 +40,7 @@
 
 ---
 
-### 1.2 Quan hệ giữa các Resource
+### 2. Quan hệ giữa các Resource
 
 | Quan hệ | Kiểu | Vị trí khóa ngoại | Cardinality & Diễn giải |
 | :--- | :---: | :--- | :--- |
@@ -52,7 +52,7 @@
 
 ---
 
-## 2. URL List – 16 Endpoints
+## 3. URL List – 16 Endpoints
 
 Tất cả các endpoint sử dụng tiền tố `/api/v1`, tuân thủ cú pháp danh từ số nhiều (kebab-case) và trả về dữ liệu định dạng JSON.
 
@@ -77,6 +77,6 @@ Tất cả các endpoint sử dụng tiền tố `/api/v1`, tuân thủ cú phá
 
 ---
 
-## 3. ERD
+## 4. ERD
 
 ![erd](erd.png)
