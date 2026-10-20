@@ -6,7 +6,7 @@ REST API cho hệ thống bán sách online, xây bằng **Flask + SQLAlchemy**,
 
 - Python 3.10+
 - Flask 3.x, Flask-SQLAlchemy 3.1+, SQLAlchemy 2.x
-- pytest (để chạy test)
+- pytest
 
 ## Cài đặt và chạy
 
@@ -36,7 +36,7 @@ Các lệnh khác:
 | `strategy` | cả hai | `cursor` (mặc định) hoặc `offset` |
 | `limit` | cả hai | Số item mỗi trang. Mặc định 20, tối đa 100 |
 | `offset` | offset | Vị trí bắt đầu, mặc định 0 |
-| `cursor` | cursor | Token lấy từ `pagination.next_cursor` của trang trước |
+| `cursor` | cursor | Token lấy từ `next_cursor` của trang trước |
 | `sort` | cả hai | Danh sách key cách nhau. Mặc định `-id` |
 | `genre` | cả hai | Lọc theo `slug` của category |
 | `in_stock` | cả hai | `true` để chỉ lấy sách còn hàng |
@@ -51,7 +51,7 @@ curl "localhost:5000/api/v1/books?limit=5"
 # Filter genre + sort nhiều key
 curl "localhost:5000/api/v1/books?genre=tech&sort=-price,title&limit=10"
 
-# Trang kế tiếp: dùng nguyên next_cursor, giữ nguyên sort và genre
+# Trang kế tiếp: dùng next_cursor của trang trước, giữ nguyên sort và genre
 curl "localhost:5000/api/v1/books?genre=tech&sort=-price,title&limit=10&cursor=<next_cursor>"
 
 # Offset: nhảy tới trang 3
@@ -72,7 +72,6 @@ curl "localhost:5000/api/v1/books?strategy=offset&offset=20&limit=10"
       "authors": [{"id": 1, "name": "Robert C. Martin", "role": "lead"}],
       "price": {"amount": 450000, "currency": "VND"},
       "inStock": true,
-      "createdAt": "2026-10-20T01:33:03Z"
     }
   ],
   "pagination": {
