@@ -1,0 +1,4 @@
+flask>=3.0
+connexion[flask,swagger-ui,uvicorn]>=3.0
+flask-smorest>=0.44
+marshmallow>=3.20

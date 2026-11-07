@@ -1,0 +1,59 @@
+openapi: 3.0.3
+info: { title: Product API (Design-first), version: 1.0.0 }
+servers:
+  - url: /api/v1
+paths:
+  /products:
+    get:
+      operationId: handlers.list_products
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Product' } }
+    post:
+      operationId: handlers.create_product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProductIn' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Product' }
+        '400': { description: Validation failed }
+        '409': { description: SKU already exists }
+  /products/{id}:
+    get:
+      operationId: handlers.get_product
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Product' }
+        '404': { description: Not Found }
+components:
+  schemas:
+    ProductIn:
+      type: object
+      required: [sku, name, price_cents]
+      additionalProperties: false
+      properties:
+        sku:         { type: string, minLength: 3, maxLength: 32 }
+        name:        { type: string, minLength: 1, maxLength: 255 }
+        price_cents: { type: integer, minimum: 0 }
+    Product:
+      type: object
+      properties:
+        id:           { type: integer }
+        sku:          { type: string }
+        name:         { type: string }
+        price_cents:  { type: integer }
+        qty_in_stock: { type: integer }
