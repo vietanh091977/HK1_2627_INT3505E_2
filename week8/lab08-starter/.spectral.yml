@@ -1,0 +1,41 @@
+extends: [spectral:oas]
+
+rules:
+  info-contact: off
+  operation-description: off
+  operation-tags: off
+
+  # Lỗi 2: response 204 không được có body
+  no-body-on-204:
+    description: "Response 204 No Content không được khai báo content."
+    severity: error
+    given: "$.paths[*][*].responses['204']"
+    then:
+      field: content
+      function: falsy
+
+  # Lỗi 3: Book.year phải là integer
+  book-year-must-be-integer:
+    description: "Book.year phải có type: integer."
+    severity: error
+    given: "$.components.schemas.Book.properties.year"
+    then:
+      field: type
+      function: enumeration
+      functionOptions:
+        values: [integer]
+
+  # Custom rule: schema của response 200 không được rỗng
+  response-200-schema-not-empty:
+    description: "Schema của response 200 phải có >0 trường (object) hoặc khai báo items (array)."
+    severity: error
+    given: "$.paths[*][*].responses['200'].content[*].schema"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          anyOf:
+            - required: [properties]
+              properties:
+                properties: {type: object, minProperties: 1}
+            - required: [items]
