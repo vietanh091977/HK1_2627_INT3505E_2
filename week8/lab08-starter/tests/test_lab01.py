@@ -55,3 +55,19 @@ def test_deleted_book_is_not_found_afterwards(client):
 
     assert client.delete(f"/books/{book_id}").status_code == 204
     assert client.get(f"/books/{book_id}").status_code == 404
+
+
+def test_response_extra_field_blocked(client):
+    schema = get_book_schema()
+    created = client.post(
+        "/books",
+        json={"title": "DDIA", "author": "Kleppmann", "year": 2017, "isbn": "9781449373320"},
+    )
+    book = client.get(f"/books/{created.get_json()['id']}").get_json()
+
+    validate(book, schema)
+
+    leaked = copy.deepcopy(book)
+    leaked["password_hash"] = "abc123"
+    with pytest.raises(ValidationError):
+        validate(leaked, schema)
