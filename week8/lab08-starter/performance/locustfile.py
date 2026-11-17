@@ -35,9 +35,26 @@ class BooksUser(HttpUser):
         unique = next(_counter)
         self.client.post(
             "/books",
-            json={"title": f"Load test {unique}", "author": "locust"},
+            json={
+                "title": f"Load test {unique}",
+                "author": "locust",
+                "year": random.randint(1990, 2024),
+            },
             name="POST /books",
         )
 
     # LAB 4: add search_by_year() and explain any injected failures.
     # A client-side artificial failure is not a real HTTP 500 from the server.
+
+    @task(1)
+    def search_by_year(self):
+        year = random.randint(1990, 2024)
+        with self.client.get(
+            f"/books?year={year}", name="GET /books?year=", catch_response=True
+        ) as response:
+            if response.status_code != 200:
+                response.failure(f"Unexpected status {response.status_code}")
+            elif random.random() < 0.01:
+                response.failure("Simulated failure (client-side, not HTTP 500)")
+            else:
+                response.success()
