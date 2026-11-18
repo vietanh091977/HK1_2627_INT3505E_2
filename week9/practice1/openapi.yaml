@@ -1,0 +1,199 @@
+openapi: 3.0.3
+info:
+  title: Users API (URI Path Versioning)
+  description: Minh họa URI Path Versioning giữa v1 (deprecated) và v2.
+  version: 2.0.0
+servers:
+  - url: http://localhost:5000
+    description: Local Flask dev server
+tags:
+  - name: v1
+    description: Phiên bản cũ - deprecated, sẽ ngừng hoạt động vào 31/12/2026
+  - name: v2
+    description: Phiên bản hiện tại
+
+paths:
+  /api/v1/users/{id}:
+    get:
+      tags: [v1]
+      operationId: getUserV1
+      summary: Lấy thông tin user (v1)
+      description: |
+        **Deprecated.** Dùng `GET /api/v2/users/{id}` thay thế.
+        Response luôn kèm header `Sunset`, `Deprecation: true` và `Link` trỏ tới bản thay thế.
+      deprecated: true
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Thành công
+          headers:
+            Sunset:
+              $ref: '#/components/headers/Sunset'
+            Deprecation:
+              $ref: '#/components/headers/Deprecation'
+            Link:
+              $ref: '#/components/headers/SuccessorLink'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserV1'
+              example:
+                id: 1
+                full_name: Văn Nguyễn
+                email: a@vnu.vn
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v2/users/{id}:
+    get:
+      tags: [v2]
+      operationId: getUserV2
+      summary: Lấy thông tin user (v2)
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserV2'
+              example:
+                id: 1
+                first_name: Văn
+                last_name: Nguyễn
+                email: a@vnu.vn
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v2/users:
+    post:
+      tags: [v2]
+      operationId: createUserV2
+      summary: Tạo user mới (v2)
+      description: Endpoint mới, chỉ có ở v2 (thay đổi additive, v1 không bị ảnh hưởng).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+            example:
+              first_name: Minh
+              last_name: Lê
+              email: c@vnu.vn
+      responses:
+        '201':
+          description: Tạo thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserV2'
+              example:
+                id: 3
+                first_name: Minh
+                last_name: Lê
+                email: c@vnu.vn
+        '400':
+          description: Thiếu field bắt buộc hoặc body không phải JSON hợp lệ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "missing fields: ['email']"
+
+components:
+  parameters:
+    UserId:
+      name: id
+      in: path
+      required: true
+      description: ID của user
+      schema:
+        type: integer
+        minimum: 1
+        example: 1
+
+  headers:
+    Sunset:
+      description: Thời điểm v1 ngừng hoạt động (HTTP-date, RFC 8594).
+      schema:
+        type: string
+        example: Thu, 31 Dec 2026 23:59:59 GMT
+    Deprecation:
+      description: Cờ boolean báo endpoint đã deprecated (dành cho SDK / fetch wrapper).
+      schema:
+        type: string
+        enum: ['true']
+    SuccessorLink:
+      description: Trỏ tới version thay thế, dạng `rel="successor-version"`.
+      schema:
+        type: string
+        example: '</api/v2/users>; rel="successor-version"'
+
+  schemas:
+    UserV1:
+      type: object
+      required: [id, full_name, email]
+      properties:
+        id:
+          type: integer
+          example: 1
+        full_name:
+          type: string
+          example: Văn Nguyễn
+        email:
+          type: string
+          format: email
+          example: a@vnu.vn
+
+    UserV2:
+      type: object
+      required: [id, first_name, last_name, email]
+      properties:
+        id:
+          type: integer
+          example: 1
+        first_name:
+          type: string
+          example: Văn
+        last_name:
+          type: string
+          example: Nguyễn
+        email:
+          type: string
+          format: email
+          example: a@vnu.vn
+
+    UserCreate:
+      type: object
+      required: [first_name, last_name, email]
+      properties:
+        first_name:
+          type: string
+          minLength: 1
+        last_name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+
+  responses:
+    NotFound:
+      description: Không tìm thấy user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: not found

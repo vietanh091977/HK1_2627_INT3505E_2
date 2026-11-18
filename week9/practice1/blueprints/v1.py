@@ -3,6 +3,13 @@ from .users_data import get_user
 
 bp = Blueprint("v1", __name__, url_prefix="/users")
 
+@bp.after_request
+def add_sunset(resp):
+    resp.headers["Sunset"] = "Thu, 31 Dec 2026 23:59:59 GMT"
+    resp.headers["Deprecation"] = "true"
+    resp.headers["Link"] = '</api/v2/users>; rel="successor-version"'
+    return resp
+
 @bp.route("/<int:uid>")
 def get(uid):
     u = get_user(uid)
